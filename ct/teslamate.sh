@@ -13,6 +13,7 @@ var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_hostname="${var_hostname:-teslamate-lxc}"
 
 header_info "$APP"
 variables
