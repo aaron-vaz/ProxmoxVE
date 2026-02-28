@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-set +u
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: aaron-vaz
 # License: MIT | https://github.com/aaron-vaz/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/teslamate-org/teslamate
 
-source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 export APPLICATION="TeslaMate"
 export APP="TeslaMate"
+
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
