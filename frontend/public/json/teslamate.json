@@ -1,0 +1,48 @@
+{
+  "name": "TeslaMate",
+  "slug": "teslamate",
+  "categories": [
+    16
+  ],
+  "date_created": "2026-02-22",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 4000,
+  "documentation": "https://docs.teslamate.org/",
+  "website": "https://teslamate.org/",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/main/png/teslamate.png",
+  "config_path": "/opt/teslamate/.env",
+  "description": "A powerful, self-hosted data logger for your Tesla vehicle with Grafana dashboards and real-time MQTT support.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/teslamate.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 16,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Grafana is accessible on port 3000 with default credentials admin/admin",
+      "type": "info"
+    },
+    {
+      "text": "Change the Grafana admin password after first login!",
+      "type": "warning"
+    },
+    {
+      "text": "To enable MQTT, edit /opt/teslamate/.env: set DISABLE_MQTT=false and add MQTT_HOST, MQTT_USERNAME, MQTT_PASSWORD",
+      "type": "info"
+    }
+  ]
+}
