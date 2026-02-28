@@ -32,7 +32,7 @@ PG_VERSION="17" setup_postgresql
 
 msg_info "Setting up PostgreSQL Database"
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD sudo -u postgres psql -c "CREATE ROLE teslamate WITH LOGIN PASSWORD '$DB_PASS';"
+$STD sudo -u postgres psql -c "CREATE ROLE teslamate WITH LOGIN PASSWORD '$DB_PASS' SUPERUSER;"
 $STD sudo -u postgres psql -c "CREATE DATABASE teslamate WITH OWNER teslamate ENCODING 'UTF8' TEMPLATE template0;"
 $STD sudo -u postgres psql -d teslamate -c "CREATE EXTENSION IF NOT EXISTS cube;"
 $STD sudo -u postgres psql -d teslamate -c "CREATE EXTENSION IF NOT EXISTS earthdistance;"
@@ -57,12 +57,12 @@ fetch_and_deploy_gh_release "teslamate" "teslamate-org/teslamate" "tarball" "lat
 
 msg_info "Building ${APP}"
 cd /opt/teslamate
+export MIX_ENV=prod
 $STD mix local.hex --force
 $STD mix local.rebar --force
 $STD mix deps.get --only prod
 $STD npm install --prefix ./assets
 $STD npm run deploy --prefix ./assets
-export MIX_ENV=prod
 $STD mix do phx.digest, release --overwrite
 msg_ok "Built ${APP}"
 
