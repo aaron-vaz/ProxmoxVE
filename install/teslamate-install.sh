@@ -25,8 +25,8 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 
-PG_VERSION="17" PG_EXTENSIONS="cube,earthdistance" setup_postgresql
-PG_DB_NAME="teslamate" PG_DB_USER="teslamate" PG_DB_EXTENSIONS="cube,earthdistance" setup_postgresql_db
+PG_VERSION="17" setup_postgresql
+PG_DB_NAME="teslamate" PG_DB_USER="teslamate" setup_postgresql_db
 
 msg_info "Installing Grafana"
 wget -qO- https://apt.grafana.com/gpg.key | gpg --dearmor >/usr/share/keyrings/grafana.gpg 2>/dev/null
