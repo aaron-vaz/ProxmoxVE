@@ -29,21 +29,6 @@ function update_script() {
     exit
   fi
 
-  source /opt/teslamate/.env
-  
-  local update_grafana=false
-  local update_postgresql=false
-  
-  if systemctl is-active -q grafana-server 2>/dev/null; then
-    update_grafana=true
-  fi
-  
-  if [[ -z "$DATABASE_HOST" ]] || [[ "$DATABASE_HOST" == "127.0.0.1" ]] || [[ "$DATABASE_HOST" == "localhost" ]]; then
-    if systemctl is-active -q postgresql 2>/dev/null; then
-      update_postgresql=true
-    fi
-  fi
-
   if check_for_gh_release "teslamate" "teslamate-org/teslamate"; then
     msg_info "Stopping Service"
     systemctl stop teslamate
@@ -69,24 +54,6 @@ function update_script() {
     cp /opt/teslamate_env_backup /opt/teslamate/.env 2>/dev/null || true
     rm -f /opt/teslamate_env_backup
     msg_ok "Restored Data"
-
-    if [[ "$update_grafana" == "true" ]]; then
-      msg_info "Updating Grafana"
-      $STD apt-get update
-      $STD apt-get install -y grafana
-      msg_ok "Updated Grafana"
-    else
-      msg_info "Skipping Grafana update (external)"
-    fi
-
-    if [[ "$update_postgresql" == "true" ]]; then
-      msg_info "Updating PostgreSQL"
-      $STD apt-get update
-      $STD apt-get install -y postgresql
-      msg_ok "Updated PostgreSQL"
-    else
-      msg_info "Skipping PostgreSQL update (external)"
-    fi
 
     msg_info "Starting Service"
     systemctl start teslamate
