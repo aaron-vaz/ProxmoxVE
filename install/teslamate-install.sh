@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set +u
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: aaron-vaz
