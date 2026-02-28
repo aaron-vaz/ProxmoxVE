@@ -26,7 +26,17 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="22" setup_nodejs
 
 PG_VERSION="17" setup_postgresql
-PG_DB_NAME="teslamate" PG_DB_USER="teslamate" setup_postgresql_db
+
+msg_info "Setting up PostgreSQL Database"
+DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+$STD sudo -u postgres psql -c "CREATE ROLE teslamate WITH LOGIN PASSWORD '$DB_PASS';"
+$STD sudo -u postgres psql -c "CREATE DATABASE teslamate WITH OWNER teslamate ENCODING 'UTF8' TEMPLATE template0;"
+$STD sudo -u postgres psql -d teslamate -c "CREATE EXTENSION IF NOT EXISTS cube;"
+$STD sudo -u postgres psql -d teslamate -c "CREATE EXTENSION IF NOT EXISTS earthdistance;"
+export PG_DB_USER="teslamate"
+export PG_DB_PASS="$DB_PASS"
+export PG_DB_NAME="teslamate"
+msg_ok "Set up PostgreSQL Database"
 
 msg_info "Installing Grafana"
 wget -qO- https://apt.grafana.com/gpg.key | gpg --dearmor >/usr/share/keyrings/grafana.gpg 2>/dev/null
