@@ -7,6 +7,7 @@
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 export APPLICATION="TeslaMate"
+export APP="TeslaMate"
 color
 verb_ip6
 catch_errors
