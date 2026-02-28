@@ -16,6 +16,7 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   gnupg \
+  sudo \
   erlang \
   elixir \
   inotify-tools \
