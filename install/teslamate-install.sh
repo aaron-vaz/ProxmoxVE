@@ -62,7 +62,8 @@ $STD mix local.rebar --force
 $STD mix deps.get --only prod
 $STD npm install --prefix ./assets
 $STD npm run deploy --prefix ./assets
-$STD MIX_ENV=prod mix do phx.digest, release --overwrite
+export MIX_ENV=prod
+$STD mix do phx.digest, release --overwrite
 msg_ok "Built ${APP}"
 
 msg_info "Configuring ${APP}"
