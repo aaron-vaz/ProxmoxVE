@@ -6,6 +6,7 @@
 # Source: https://github.com/teslamate-org/teslamate
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+export APPLICATION="TeslaMate"
 color
 verb_ip6
 catch_errors
@@ -134,7 +135,7 @@ EOF
 $STD curl -sf -X POST "http://localhost:3000/api/datasources" \
   -H "Content-Type: application/json" \
   -u "admin:admin" \
-  -d @/tmp/datasource.json || msg_warn "Datasource may already exist or failed to configure"
+  -d @/tmp/datasource.json || msg_warn "Datasource may already exist"
 rm -f /tmp/datasource.json
 msg_ok "Configured Grafana Datasource"
 
