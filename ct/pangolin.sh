@@ -3,13 +3,13 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://pangolin.net/
+# Source: https://pangolin.net/ | Github: https://github.com/fosrl/pangolin
 
 APP="Pangolin"
 var_tags="${var_tags:-proxy}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
-var_disk="${var_disk:-5}"
+var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -28,6 +28,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  ensure_dependencies build-essential python3
+
+  NODE_VERSION="24" setup_nodejs
 
   if check_for_gh_release "pangolin" "fosrl/pangolin"; then
     msg_info "Stopping Service"

@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ) | DevelopmentCats | AlphaLawless
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://romm.app
+# Source: https://romm.app | Github: https://github.com/rommapp/romm
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -42,7 +42,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.13" setup_uv
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 setup_mariadb
 MARIADB_DB_NAME="romm" MARIADB_DB_USER="romm" setup_mariadb_db
 

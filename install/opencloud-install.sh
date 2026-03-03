@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://opencloud.eu
+# Source: https://opencloud.eu | Github: https://github.com/opencloud-eu/opencloud
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -34,7 +34,7 @@ for server in "${servers[@]}"; do
   done
   if ((attempt >= MAX_ATTEMPTS)); then
     msg_error "No more attempts - aborting script!"
-    exit 1
+    exit 254
   fi
 done
 

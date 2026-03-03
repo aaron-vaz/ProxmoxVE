@@ -67,8 +67,9 @@ THIN="discard=on,ssd=1,"
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
-trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
-trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
+trap 'post_update_to_api "failed" "130"' SIGINT
+trap 'post_update_to_api "failed" "143"' SIGTERM
+trap 'post_update_to_api "failed" "129"; exit 129' SIGHUP
 function error_handler() {
   local exit_code="$?"
   local line_number="$1"
@@ -162,7 +163,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 9)); then
       msg_error "This version of Proxmox VE is not supported."
       msg_error "Supported: Proxmox VE version 8.0 – 8.9"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -173,7 +174,7 @@ pve_check() {
     if ((MINOR < 0 || MINOR > 1)); then
       msg_error "This version of Proxmox VE is not supported."
       msg_error "Supported: Proxmox VE version 9.0 – 9.1"
-      exit 1
+      exit 105
     fi
     return 0
   fi
@@ -181,7 +182,7 @@ pve_check() {
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
   msg_error "Supported versions: Proxmox VE 8.0 – 8.x or 9.0 – 9.1"
-  exit 1
+  exit 105
 }
 
 function arch_check() {
@@ -220,7 +221,7 @@ function ensure_pv() {
     if ! apt-get update -qq &>/dev/null || ! apt-get install -y pv &>/dev/null; then
       msg_error "Failed to install pv automatically."
       echo -e "\nPlease run manually on the Proxmox host:\n  apt install pv\n"
-      exit 1
+      exit 237
     fi
     msg_ok "Installed pv"
   fi
@@ -248,14 +249,14 @@ function download_and_validate_xz() {
   if ! curl -fSL -o "$file" "$url"; then
     msg_error "Download failed: $url"
     rm -f "$file"
-    exit 1
+    exit 115
   fi
 
   # Validate again
   if ! xz -t "$file" &>/dev/null; then
     msg_error "Downloaded file $(basename "$file") is corrupted. Please try again later."
     rm -f "$file"
-    exit 1
+    exit 115
   fi
   msg_ok "Downloaded and validated $(basename "$file")"
 }
@@ -271,7 +272,7 @@ function extract_xz_with_pv() {
   if ! xz -dc "$file" | pv -N "Extracting" >"$target"; then
     msg_error "Failed to extract $file"
     rm -f "$target"
-    exit 1
+    exit 115
   fi
   msg_ok "Decompressed to $target"
 }
@@ -591,7 +592,7 @@ DISK_REF="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully imported disk
 [[ -z "$DISK_REF" ]] && {
   msg_error "Unable to determine imported disk reference."
   echo "$IMPORT_OUT"
-  exit 1
+  exit 226
 }
 msg_ok "Imported disk (${CL}${BL}${DISK_REF}${CL})"
 

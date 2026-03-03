@@ -3,6 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://filebrowser.org/ | Github: https://github.com/filebrowser/filebrowser
 
 function header_info {
   clear
@@ -51,7 +52,7 @@ elif [[ -f "/etc/debian_version" ]]; then
   PKG_MANAGER="apt-get install -y"
 else
   echo -e "${CROSS} Unsupported OS detected. Exiting."
-  exit 1
+  exit 238
 fi
 
 header_info

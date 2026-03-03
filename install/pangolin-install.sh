@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://pangolin.net/
+# Source: https://pangolin.net/ | Github: https://github.com/fosrl/pangolin
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -15,11 +15,13 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
+  build-essential \
+  python3 \
   sqlite3 \
   iptables
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball"
 fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_amd64"
 fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_amd64.tar.gz"

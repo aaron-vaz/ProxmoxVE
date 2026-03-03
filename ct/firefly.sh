@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: quantumryuu | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://firefly-iii.org/
+# Source: https://firefly-iii.org/ | Github: https://github.com/firefly-iii/firefly-iii
 
 APP="Firefly"
 var_tags="${var_tags:-finance}"
@@ -28,7 +28,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   setup_mariadb
+  PHP_VERSION="8.5" PHP_APACHE="YES" setup_php
+
   if check_for_gh_release "firefly" "firefly-iii/firefly-iii"; then
     systemctl stop apache2
     cp /opt/firefly/.env /opt/.env
