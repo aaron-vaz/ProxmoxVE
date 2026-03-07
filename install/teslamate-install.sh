@@ -10,75 +10,56 @@ export APP="TeslaMate"
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 
-if [[ -n "$var_minimal_install" ]]; then
-  use_existing_pg="false"
-  use_existing_grafana="false"
-  use_existing_mqtt="false"
-else
-  BACKTITLE="TeslaMate Installation"
-  
-  if command -v whiptail &>/dev/null; then
-    SELECTED=$(whiptail --backtitle "$BACKTITLE" --title "Select Components to Install" --checklist \
-      "Choose which components to install locally. Select 'No' to use existing service." 15 60 4 \
-      "POSTGRES" "PostgreSQL Database" ON \
-      "GRAFANA" "Grafana Dashboards" ON \
-      "MQTT" "MQTT Broker" ON 3>&1 1>&2 2>&3)
-    
-    use_existing_pg="true"
-    use_existing_grafana="true"
-    use_existing_mqtt="true"
-    
-    if [[ "$SELECTED" == *"POSTGRES"* ]]; then
-      use_existing_pg="false"
-    fi
-    if [[ "$SELECTED" == *"GRAFANA"* ]]; then
-      use_existing_grafana="false"
-    fi
-    if [[ "$SELECTED" == *"MQTT"* ]]; then
-      use_existing_mqtt="false"
-    fi
-  elif [[ -t 0 ]]; then
-    echo ""
-    echo "TeslaMate Installation Options"
-    echo "=============================="
-    echo ""
-    printf "Install PostgreSQL locally? (default: yes) [y/n]: "
-    read -r response
-    if [[ "$response" =~ ^[Nn]|^[Nn][Oo]$ ]]; then
-      use_existing_pg="true"
-    else
-      use_existing_pg="false"
-    fi
-    
-    printf "Install Grafana locally? (default: yes) [y/n]: "
-    read -r response
-    if [[ "$response" =~ ^[Nn]|^[Nn][Oo]$ ]]; then
-      use_existing_grafana="true"
-    else
-      use_existing_grafana="false"
-    fi
-    
-    printf "Install MQTT Broker locally? (default: yes) [y/n]: "
-    read -r response
-    if [[ "$response" =~ ^[Nn]|^[Nn][Oo]$ ]]; then
-      use_existing_mqtt="true"
-    else
-      use_existing_mqtt="false"
-    fi
-  else
-  else
-    use_existing_pg="false"
-    use_existing_grafana="false"
-    use_existing_mqtt="false"
-  fi
-fi
-
 color
 verb_ip6
 catch_errors
 setting_up_container
 network_check
 update_os
+
+echo ""
+echo ""
+echo -e "🤖 ${BL}TeslaMate Installation Options${CL}"
+echo "─────────────────────────────────────────"
+echo "Select components to install locally:"
+echo ""
+echo " 1) Full install (PostgreSQL + Grafana + MQTT)"
+echo " 2) Custom (choose below)"
+echo ""
+
+read -r -p "${TAB3}Select option [1]: " INSTALL_TYPE
+INSTALL_TYPE="${INSTALL_TYPE:-1}"
+
+if [[ "$INSTALL_TYPE" == "1" ]]; then
+  use_existing_pg="false"
+  use_existing_grafana="false"
+  use_existing_mqtt="false"
+else
+  echo ""
+  printf "${TAB3}Install PostgreSQL locally? [Y/n]: "
+  read -r response
+  if [[ "$response" =~ ^[Nn]|^[Nn][Oo]$ ]]; then
+    use_existing_pg="true"
+  else
+    use_existing_pg="false"
+  fi
+  
+  printf "${TAB3}Install Grafana locally? [Y/n]: "
+  read -r response
+  if [[ "$response" =~ ^[Nn]|^[Nn][Oo]$ ]]; then
+    use_existing_grafana="true"
+  else
+    use_existing_grafana="false"
+  fi
+  
+  printf "${TAB3}Install MQTT Broker locally? [Y/n]: "
+  read -r response
+  if [[ "$response" =~ ^[Nn]|^[Nn][Oo]$ ]]; then
+    use_existing_mqtt="true"
+  else
+    use_existing_mqtt="false"
+  fi
+fi
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
@@ -93,18 +74,27 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="22" setup_nodejs
 
 if [[ "$use_existing_pg" == "true" ]]; then
-  PG_HOST=$(whiptail --backtitle "$BACKTITLE" --title "PostgreSQL Configuration" --inputbox "PostgreSQL Host:" 10 60 "localhost" 3>&1 1>&2 2>&3) || exit 1
-  PG_PORT=$(whiptail --backtitle "$BACKTITLE" --title "PostgreSQL Configuration" --inputbox "PostgreSQL Port:" 10 60 "5432" 3>&1 1>&2 2>&3) || exit 1
-  PG_DB_NAME=$(whiptail --backtitle "$BACKTITLE" --title "PostgreSQL Configuration" --inputbox "Database Name:" 10 60 "teslamate" 3>&1 1>&2 2>&3) || exit 1
-  PG_DB_USER=$(whiptail --backtitle "$BACKTITLE" --title "PostgreSQL Configuration" --inputbox "Database User:" 10 60 "teslamate" 3>&1 1>&2 2>&3) || exit 1
-  PG_DB_PASS=$(whiptail --backtitle "$BACKTITLE" --title "PostgreSQL Configuration" --passwordbox "Database Password:" 10 60 3>&1 1>&2 2>&3) || exit 1
-
+  echo ""
+  echo "PostgreSQL Configuration"
+  echo "─────────────────────────────────────────"
+  read -r -p "${TAB3}PostgreSQL Host: " PG_HOST
+  PG_HOST="${PG_HOST:-localhost}"
+  read -r -p "${TAB3}PostgreSQL Port: " PG_PORT
+  PG_PORT="${PG_PORT:-5432}"
+  read -r -p "${TAB3}Database Name: " PG_DB_NAME
+  PG_DB_NAME="${PG_DB_NAME:-teslamate}"
+  read -r -p "${TAB3}Database User: " PG_DB_USER
+  PG_DB_USER="${PG_DB_USER:-teslamate}"
+  read -r -p "${TAB3}Database Password: " -s PG_DB_PASS
+  echo ""
+  
   msg_info "Testing PostgreSQL Connection"
   export PGPASSWORD="$PG_DB_PASS"
   if ! psql -h "$PG_HOST" -p "$PG_PORT" -U "$PG_DB_USER" -d "$PG_DB_NAME" -c "SELECT 1" >/dev/null 2>&1; then
     msg_error "Cannot connect to PostgreSQL database"
     exit 1
   fi
+  export PG_HOST PG_PORT PG_DB_NAME PG_DB_USER PG_DB_PASS
   msg_ok "Connected to PostgreSQL"
 else
   PG_VERSION="17" setup_postgresql
@@ -124,9 +114,15 @@ else
 fi
 
 if [[ "$use_existing_grafana" == "true" ]]; then
-  GRAFANA_URL=$(whiptail --backtitle "$BACKTITLE" --title "Grafana Configuration" --inputbox "Grafana URL (e.g. http://192.168.1.100:3000):" 10 60 "http://localhost:3000" 3>&1 1>&2 2>&3) || exit 1
-  GRAFANA_USER=$(whiptail --backtitle "$BACKTITLE" --title "Grafana Configuration" --inputbox "Grafana Username:" 10 60 "admin" 3>&1 1>&2 2>&3) || exit 1
-  GRAFANA_PASSWORD=$(whiptail --backtitle "$BACKTITLE" --title "Grafana Configuration" --passwordbox "Grafana Password:" 10 60 3>&1 1>&2 2>&3) || exit 1
+  echo ""
+  echo "Grafana Configuration"
+  echo "─────────────────────────────────────────"
+  read -r -p "${TAB3}Grafana URL (e.g. http://192.168.1.100:3000): " GRAFANA_URL
+  GRAFANA_URL="${GRAFANA_URL:-http://localhost:3000}"
+  read -r -p "${TAB3}Grafana Username: " GRAFANA_USER
+  GRAFANA_USER="${GRAFANA_USER:-admin}"
+  read -r -p "${TAB3}Grafana Password: " -s GRAFANA_PASSWORD
+  echo ""
 else
   msg_info "Installing Grafana"
   wget -qO- https://apt.grafana.com/gpg.key | gpg --dearmor >/usr/share/keyrings/grafana.gpg 2>/dev/null
@@ -143,11 +139,17 @@ EOF
 fi
 
 if [[ "$use_existing_mqtt" == "true" ]]; then
-  MQTT_HOST=$(whiptail --backtitle "$BACKTITLE" --title "MQTT Configuration" --inputbox "MQTT Host:" 10 60 "localhost" 3>&1 1>&2 2>&3) || exit 1
-  MQTT_PORT=$(whiptail --backtitle "$BACKTITLE" --title "MQTT Configuration" --inputbox "MQTT Port:" 10 60 "1883" 3>&1 1>&2 2>&3) || exit 1
-  MQTT_USERNAME=$(whiptail --backtitle "$BACKTITLE" --title "MQTT Configuration" --inputbox "MQTT Username (leave empty for anonymous):" 10 60 "" 3>&1 1>&2 2>&3) || exit 1
+  echo ""
+  echo "MQTT Configuration"
+  echo "─────────────────────────────────────────"
+  read -r -p "${TAB3}MQTT Host: " MQTT_HOST
+  MQTT_HOST="${MQTT_HOST:-localhost}"
+  read -r -p "${TAB3}MQTT Port: " MQTT_PORT
+  MQTT_PORT="${MQTT_PORT:-1883}"
+  read -r -p "${TAB3}MQTT Username (leave empty for anonymous): " MQTT_USERNAME
   if [[ -n "$MQTT_USERNAME" ]]; then
-    MQTT_PASSWORD=$(whiptail --backtitle "$BACKTITLE" --title "MQTT Configuration" --passwordbox "MQTT Password:" 10 60 3>&1 1>&2 2>&3) || exit 1
+    read -r -p "${TAB3}MQTT Password: " -s MQTT_PASSWORD
+    echo ""
   fi
 fi
 
