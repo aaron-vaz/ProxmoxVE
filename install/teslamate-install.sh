@@ -17,24 +17,54 @@ if [[ -n "$var_minimal_install" ]]; then
 else
   BACKTITLE="TeslaMate Installation"
   
-  SELECTED=$(whiptail --backtitle "$BACKTITLE" --title "Select Components to Install" --checklist \
-    "Choose which components to install locally. Select 'No' to use existing service." 15 60 4 \
-    "POSTGRES" "PostgreSQL Database" ON \
-    "GRAFANA" "Grafana Dashboards" ON \
-    "MQTT" "MQTT Broker" ON 3>&1 1>&2 2>&3)
-  
-  use_existing_pg="true"
-  use_existing_grafana="true"
-  use_existing_mqtt="true"
-  
-  if [[ "$SELECTED" == *"POSTGRES"* ]]; then
-    use_existing_pg="false"
-  fi
-  if [[ "$SELECTED" == *"GRAFANA"* ]]; then
-    use_existing_grafana="false"
-  fi
-  if [[ "$SELECTED" == *"MQTT"* ]]; then
-    use_existing_mqtt="false"
+  if command -v whiptail &>/dev/null && [[ -t 1 || -t 0 ]]; then
+    SELECTED=$(whiptail --backtitle "$BACKTITLE" --title "Select Components to Install" --checklist \
+      "Choose which components to install locally. Select 'No' to use existing service." 15 60 4 \
+      "POSTGRES" "PostgreSQL Database" ON \
+      "GRAFANA" "Grafana Dashboards" ON \
+      "MQTT" "MQTT Broker" ON 3>&1 1>&2 2>&3)
+    
+    use_existing_pg="true"
+    use_existing_grafana="true"
+    use_existing_mqtt="true"
+    
+    if [[ "$SELECTED" == *"POSTGRES"* ]]; then
+      use_existing_pg="false"
+    fi
+    if [[ "$SELECTED" == *"GRAFANA"* ]]; then
+      use_existing_grafana="false"
+    fi
+    if [[ "$SELECTED" == *"MQTT"* ]]; then
+      use_existing_mqtt="false"
+    fi
+  else
+    echo ""
+    echo "TeslaMate Installation Options"
+    echo "=============================="
+    echo ""
+    printf "Install PostgreSQL locally? (default: yes) [y/n]: "
+    read -r response
+    if [[ "$response" =~ ^[Nn]|^[Nn][Oo]$ ]]; then
+      use_existing_pg="true"
+    else
+      use_existing_pg="false"
+    fi
+    
+    printf "Install Grafana locally? (default: yes) [y/n]: "
+    read -r response
+    if [[ "$response" =~ ^[Nn]|^[Nn][Oo]$ ]]; then
+      use_existing_grafana="true"
+    else
+      use_existing_grafana="false"
+    fi
+    
+    printf "Install MQTT Broker locally? (default: yes) [y/n]: "
+    read -r response
+    if [[ "$response" =~ ^[Nn]|^[Nn][Oo]$ ]]; then
+      use_existing_mqtt="true"
+    else
+      use_existing_mqtt="false"
+    fi
   fi
 fi
 
