@@ -14,6 +14,8 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
+export INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/aaron-vaz/ProxmoxVE/dev/contribution/install"
+
 header_info "$APP"
 variables
 color

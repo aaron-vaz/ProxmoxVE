@@ -4096,7 +4096,8 @@ EOF'
     # that sends "configuring" status AFTER the host already reported "failed"
     export CONTAINER_INSTALLING=true
 
-    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
+    _install_url="${INSTALL_SCRIPT_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install}"
+    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${_install_url}/${var_install}.sh)"
     local lxc_exit=$?
 
     unset CONTAINER_INSTALLING
@@ -4474,7 +4475,8 @@ EOF'
           # Re-run install script in existing container (don't destroy/recreate)
           set +Eeuo pipefail
           trap - ERR
-          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
+          _install_url="${INSTALL_SCRIPT_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install}"
+          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${_install_url}/${var_install}.sh)"
           local apt_retry_exit=$?
           set -Eeuo pipefail
           trap 'error_handler' ERR
