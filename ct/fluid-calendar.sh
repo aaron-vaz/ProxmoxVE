@@ -28,6 +28,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  ensure_dependencies build-essential
+  NODE_VERSION="24" setup_nodejs
+
   if check_for_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"; then
     msg_info "Stopping Service"
     systemctl stop fluid-calendar
@@ -45,7 +49,7 @@ function update_script() {
     $STD npx prisma migrate deploy
     $STD npm run build:os
     msg_ok "Updated Fluid Calendar"
-    
+
     msg_info "Starting Service"
     systemctl start fluid-calendar
     msg_ok "Started Service"

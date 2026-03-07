@@ -47,7 +47,10 @@ function update_script() {
     cp /opt/poweradmin_powerdns.db.bak /opt/poweradmin/powerdns.db
     rm -rf /opt/poweradmin/install
     rm -f /opt/poweradmin_settings.php.bak /opt/poweradmin_powerdns.db.bak
-    chown -R www-data:www-data /opt/poweradmin
+    chown -R www-data:pdns /opt/poweradmin
+    chmod 775 /opt/poweradmin
+    chown pdns:pdns /opt/poweradmin/powerdns.db
+    chmod 664 /opt/poweradmin/powerdns.db
     msg_ok "Updated Poweradmin"
 
     msg_info "Restarting Services"

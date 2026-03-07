@@ -33,7 +33,7 @@ done
 # Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
 [[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
 MONGO_VERSION=$(get_latest_gh_tag "mongodb/mongo-tools" "100." || echo "100.14.1")
-fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-${MONGO_VERSION}.deb"
+fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-x86_64-${MONGO_VERSION}.deb" ""
 mkdir -p /usr/local/mongodb-database-tools/bin
 [[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
 [[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore

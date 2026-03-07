@@ -7,7 +7,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 
 APP="BentoPDF"
 var_tags="${var_tags:-pdf-editor}"
-var_cpu="${var_cpu:-1}"
+var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
@@ -35,16 +35,32 @@ function update_script() {
     systemctl stop bentopdf
     msg_ok "Stopped Service"
 
+    [[ -f /opt/bentopdf/.env.production ]] && cp /opt/bentopdf/.env.production /opt/production.env
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bentopdf" "alam00000/bentopdf" "tarball" "latest" "/opt/bentopdf"
 
     msg_info "Updating BentoPDF"
     cd /opt/bentopdf
     $STD npm ci --no-audit --no-fund
+    $STD npm install http-server -g
+    if [[ -f /opt/production.env ]]; then
+      mv /opt/production.env ./.env.production
+    else
+      cp ./.env.example ./.env.production
+    fi
+    export NODE_OPTIONS="--max-old-space-size=3072"
     export SIMPLE_MODE=true
-    $STD npm run build -- --mode production
+    export VITE_USE_CDN=true
+    $STD npm run build:all
     msg_ok "Updated BentoPDF"
 
     msg_info "Starting Service"
+    if grep -q '8080' /etc/systemd/system/bentopdf.service; then
+      sed -i -e 's|/bentopdf|/bentopdf/dist|' \
+        -e 's|npx.*|npx http-server -g -b -d false -r --no-dotfiles|' \
+        /etc/systemd/system/bentopdf.service
+      systemctl daemon-reload
+    fi
     systemctl start bentopdf
     msg_ok "Started Service"
     msg_ok "Updated successfully!"

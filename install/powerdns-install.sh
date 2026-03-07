@@ -38,6 +38,12 @@ msg_info "Setting up PowerDNS"
 $STD apt install -y \
   pdns-server \
   pdns-backend-sqlite3
+sed -i 's/^launch=$/# launch=/' /etc/powerdns/pdns.conf
+rm -f /etc/powerdns/pdns.d/bind.conf
+cat <<EOF >/etc/powerdns/pdns.d/gsqlite3.conf
+launch=gsqlite3
+gsqlite3-database=/opt/poweradmin/powerdns.db
+EOF
 msg_ok "Setup PowerDNS"
 
 fetch_and_deploy_gh_release "poweradmin" "poweradmin/poweradmin" "tarball"
@@ -125,9 +131,13 @@ cat <<EOF >/etc/apache2/sites-enabled/poweradmin.conf
 </VirtualHost>
 EOF
 $STD a2enmod rewrite headers
-chown -R www-data:www-data /opt/poweradmin
-$STD systemctl restart apache2
-msg_info "Created Service"
+chown -R www-data:pdns /opt/poweradmin
+chmod 775 /opt/poweradmin
+chown pdns:pdns /opt/poweradmin/powerdns.db
+chmod 664 /opt/poweradmin/powerdns.db
+usermod -aG pdns www-data
+$STD systemctl restart pdns apache2
+msg_ok "Created Service"
 
 motd_ssh
 customize

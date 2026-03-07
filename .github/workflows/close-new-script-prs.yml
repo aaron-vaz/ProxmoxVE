@@ -8,7 +8,7 @@ on:
 jobs:
   check-new-script:
     if: github.repository == 'community-scripts/ProxmoxVE'
-    runs-on: coolify-runner
+    runs-on: self-hosted
     permissions:
       pull-requests: write
       contents: read

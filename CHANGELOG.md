@@ -410,6 +410,80 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-03-07
+
+## 2026-03-06
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - RustDesk Server: Fix update script [@tremor021](https://github.com/tremor021) ([#12625](https://github.com/community-scripts/ProxmoxVE/pull/12625))
+    - [Node-RED] Restart service after update [@Aurelien30000](https://github.com/Aurelien30000) ([#12621](https://github.com/community-scripts/ProxmoxVE/pull/12621))
+    - wealthfolio: update cors [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12617](https://github.com/community-scripts/ProxmoxVE/pull/12617))
+    - CryptPad: Better update handling [@tremor021](https://github.com/tremor021) ([#12611](https://github.com/community-scripts/ProxmoxVE/pull/12611))
+
+  - #### ✨ New Features
+
+    - RustDesk Server: Switch to updated repository [@tremor021](https://github.com/tremor021) ([#12083](https://github.com/community-scripts/ProxmoxVE/pull/12083))
+
+  - #### 💥 Breaking Changes
+
+    - Semaphore: Move from BoltDB to SQLite [@tremor021](https://github.com/tremor021) ([#12624](https://github.com/community-scripts/ProxmoxVE/pull/12624))
+
+## 2026-03-05
+
+### 🆕 New Scripts
+
+  - ddclient ([#12587](https://github.com/community-scripts/ProxmoxVE/pull/12587))
+- Netbird ([#12585](https://github.com/community-scripts/ProxmoxVE/pull/12585))
+- Papra ([#12577](https://github.com/community-scripts/ProxmoxVE/pull/12577))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fluid-calendar: add build-essential to install and update dependencies [@Copilot](https://github.com/Copilot) ([#12602](https://github.com/community-scripts/ProxmoxVE/pull/12602))
+    - Refactor: BentoPDF [@vhsdream](https://github.com/vhsdream) ([#12597](https://github.com/community-scripts/ProxmoxVE/pull/12597))
+    - Tianji: Fix the bug introduced by the refactor [@tremor021](https://github.com/tremor021) ([#12564](https://github.com/community-scripts/ProxmoxVE/pull/12564))
+    - PowerDNS: use 'launch=' instead of 'launch+=' for gsqlite3 backend [@MickLesk](https://github.com/MickLesk) ([#12579](https://github.com/community-scripts/ProxmoxVE/pull/12579))
+
+### 🗑️ Deleted Scripts
+
+  - Suwayomi-Server: remove due to inactivity and very low usage [@MickLesk](https://github.com/MickLesk) ([#12596](https://github.com/community-scripts/ProxmoxVE/pull/12596))
+
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - core: add var_os / var_version to whitelist for app.vars [@MickLesk](https://github.com/MickLesk) ([#12576](https://github.com/community-scripts/ProxmoxVE/pull/12576))
+
+## 2026-03-04
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix: gitea-mirror [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12549](https://github.com/community-scripts/ProxmoxVE/pull/12549))
+    - fix(immich): correct LibRaw clone URL to official upstream [@DenislavDenev](https://github.com/DenislavDenev) ([#12526](https://github.com/community-scripts/ProxmoxVE/pull/12526))
+    - update: stirling-pdf: java 25 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#12552](https://github.com/community-scripts/ProxmoxVE/pull/12552))
+    - Docmost: register NoopAuditService globally when EE submodule is missing [@MickLesk](https://github.com/MickLesk) ([#12551](https://github.com/community-scripts/ProxmoxVE/pull/12551))
+    - jellyseer/overseer migration corrupting /usr/bin/update [@MickLesk](https://github.com/MickLesk) ([#12539](https://github.com/community-scripts/ProxmoxVE/pull/12539))
+    - PowerDNS: use gsqlite3 backend instead of BIND [@MickLesk](https://github.com/MickLesk) ([#12538](https://github.com/community-scripts/ProxmoxVE/pull/12538))
+    - addon migrations: /usr/bin/update replacement to prevent syntax error [@MickLesk](https://github.com/MickLesk) ([#12540](https://github.com/community-scripts/ProxmoxVE/pull/12540))
+
+  - #### 🔧 Refactor
+
+    - Fluid-Calendar: NodeJS bump [@tremor021](https://github.com/tremor021) ([#12558](https://github.com/community-scripts/ProxmoxVE/pull/12558))
+    - Refactor: LiteLLM [@tremor021](https://github.com/tremor021) ([#12550](https://github.com/community-scripts/ProxmoxVE/pull/12550))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools: fall back to distro packages for psql [@MickLesk](https://github.com/MickLesk) ([#12542](https://github.com/community-scripts/ProxmoxVE/pull/12542))
+    - fix: whitelist var_searchdomain and fix the handling of var_ns and va… [@tommoyer](https://github.com/tommoyer) ([#12521](https://github.com/community-scripts/ProxmoxVE/pull/12521))
+
 ## 2026-03-03
 
 ### 🆕 New Scripts
@@ -436,6 +510,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### ✨ New Features
 
     - core: recovery - add ENOSPC disk-full detection with auto-retry using * 2 hdd [@MickLesk](https://github.com/MickLesk) ([#12511](https://github.com/community-scripts/ProxmoxVE/pull/12511))
+
+### 📚 Documentation
+
+  - Fix config_path casing in reactive-resume.json [@ScubyG](https://github.com/ScubyG) ([#12525](https://github.com/community-scripts/ProxmoxVE/pull/12525))
 
 ### 🌐 Website
 
