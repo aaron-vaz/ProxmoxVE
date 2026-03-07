@@ -17,7 +17,7 @@ if [[ -n "$var_minimal_install" ]]; then
 else
   BACKTITLE="TeslaMate Installation"
   
-  if command -v whiptail &>/dev/null && [[ -t 1 || -t 0 ]]; then
+  if command -v whiptail &>/dev/null; then
     SELECTED=$(whiptail --backtitle "$BACKTITLE" --title "Select Components to Install" --checklist \
       "Choose which components to install locally. Select 'No' to use existing service." 15 60 4 \
       "POSTGRES" "PostgreSQL Database" ON \
@@ -37,7 +37,7 @@ else
     if [[ "$SELECTED" == *"MQTT"* ]]; then
       use_existing_mqtt="false"
     fi
-  else
+  elif [[ -t 0 ]]; then
     echo ""
     echo "TeslaMate Installation Options"
     echo "=============================="
@@ -65,6 +65,11 @@ else
     else
       use_existing_mqtt="false"
     fi
+  else
+  else
+    use_existing_pg="false"
+    use_existing_grafana="false"
+    use_existing_mqtt="false"
   fi
 fi
 
