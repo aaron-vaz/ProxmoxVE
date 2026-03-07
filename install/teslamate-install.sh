@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: aaron-vaz
-# License: MIT | https://github.com/aaron-vaz/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/teslamate-org/teslamate
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
@@ -40,7 +40,7 @@ get_lxc_ip
 
 fetch_and_deploy_gh_release "teslamate" "teslamate-org/teslamate" "tarball" "latest" "/opt/teslamate"
 
-msg_info "Building ${APP}"
+msg_info "Building TeslaMate"
 cd /opt/teslamate
 $STD MIX_ENV=prod mix local.hex --force
 $STD MIX_ENV=prod mix local.rebar --force
@@ -48,9 +48,9 @@ $STD mix deps.get --only prod
 $STD npm install --prefix ./assets
 $STD npm run deploy --prefix ./assets
 $STD MIX_ENV=prod mix do phx.digest, release --overwrite
-msg_ok "Built ${APP}"
+msg_ok "Built TeslaMate"
 
-msg_info "Configuring ${APP}"
+msg_info "Configuring TeslaMate"
 ENCRYPTION_KEY=$(openssl rand -hex 32)
 cat <<EOF >/opt/teslamate/.env
 LANG=en_US.UTF-8
@@ -65,7 +65,7 @@ DATABASE_HOST=127.0.0.1
 DISABLE_MQTT=true
 EOF
 chmod 600 /opt/teslamate/.env
-msg_ok "Configured ${APP}"
+msg_ok "Configured TeslaMate"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/teslamate.service

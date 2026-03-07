@@ -11,7 +11,7 @@
   "interface_port": 4000,
   "documentation": "https://docs.teslamate.org/",
   "website": "https://teslamate.org/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/main/png/teslamate.png",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/teslamate.webp",
   "config_path": "/opt/teslamate/.env",
   "description": "A powerful, self-hosted data logger for your Tesla vehicle with Grafana dashboards and real-time MQTT support.",
   "install_methods": [
