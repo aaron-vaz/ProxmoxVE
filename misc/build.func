@@ -3551,9 +3551,9 @@ build_container() {
   pushd "$TEMP_DIR" >/dev/null
   local _func_url
   if [ "$var_os" == "alpine" ]; then
-    _func_url="${FUNCTIONS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func}"
+    _func_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func"
   else
-    _func_url="${FUNCTIONS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func}"
+    _func_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func"
   fi
   export FUNCTIONS_FILE_PATH="$(curl -fsSL "$_func_url")"
   if [[ -z "$FUNCTIONS_FILE_PATH" || ${#FUNCTIONS_FILE_PATH} -lt 100 ]]; then
@@ -4096,8 +4096,7 @@ EOF'
     # that sends "configuring" status AFTER the host already reported "failed"
     export CONTAINER_INSTALLING=true
 
-    _install_url="${INSTALL_SCRIPT_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install}"
-    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${_install_url}/${var_install}.sh)"
+    lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
     local lxc_exit=$?
 
     unset CONTAINER_INSTALLING
@@ -4475,8 +4474,7 @@ EOF'
           # Re-run install script in existing container (don't destroy/recreate)
           set +Eeuo pipefail
           trap - ERR
-          _install_url="${INSTALL_SCRIPT_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install}"
-          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL ${_install_url}/${var_install}.sh)"
+          lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
           local apt_retry_exit=$?
           set -Eeuo pipefail
           trap 'error_handler' ERR

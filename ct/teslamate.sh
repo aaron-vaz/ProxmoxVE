@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/aaron-vaz/ProxmoxVE/dev/contribution/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/aaron-vaz/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: aaron-vaz
 # License: MIT | https://github.com/aaron-vaz/ProxmoxVE/raw/main/LICENSE
@@ -13,9 +13,6 @@ var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
-
-export INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/aaron-vaz/ProxmoxVE/dev/contribution/install"
-export FUNCTIONS_URL="https://raw.githubusercontent.com/aaron-vaz/ProxmoxVE/dev/contribution/misc/install.func"
 
 header_info "$APP"
 variables
