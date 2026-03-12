@@ -188,7 +188,6 @@ cp -a /opt/frigate/docker/main/rootfs/. /
 sed -i '/^.*unset DEBIAN_FRONTEND.*$/d' /opt/frigate/docker/main/install_deps.sh
 echo "libedgetpu1-max libedgetpu/accepted-eula boolean true" | debconf-set-selections
 echo "libedgetpu1-max libedgetpu/install-confirm-max boolean true" | debconf-set-selections
-# Allow Frigate's Intel media packages to overwrite files from system GPU driver packages
 echo 'force-overwrite' >/etc/dpkg/dpkg.cfg.d/force-overwrite
 $STD bash /opt/frigate/docker/main/install_deps.sh
 rm -f /etc/dpkg/dpkg.cfg.d/force-overwrite
@@ -208,10 +207,11 @@ msg_info "Building OpenVino Model"
 cd /models
 wget -q http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
 $STD tar -zxf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz --no-same-owner
-if $STD python3 /opt/frigate/docker/main/build_ov_model.py; then
+if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
+  mkdir -p /openvino-model
   cp /models/ssdlite_mobilenet_v2.xml /openvino-model/
   cp /models/ssdlite_mobilenet_v2.bin /openvino-model/
-  wget -q https://github.com/openvinotoolkit/open_model_zoo/raw/master/data/dataset_classes/coco_91cl_bkgr.txt -O /openvino-model/coco_91cl_bkgr.txt
+  $STD ln -sf $(python3 -c "import omz_tools; import os; print(os.path.join(omz_tools.__path__[0], 'data/dataset_classes/coco_91cl_bkgr.txt'))") /openvino-model/coco_91cl_bkgr.txt
   sed -i 's/truck/car/g' /openvino-model/coco_91cl_bkgr.txt
   msg_ok "Built OpenVino Model"
 else
